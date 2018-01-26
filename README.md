@@ -7,9 +7,9 @@
 3. 选择一个请求，复制为cUrl COMMAND；
 4. 打开https://curl.trillworks.com/ ，粘贴你的curl COMMAND，这个网站会把你的cUrl转换为python代码。
 5. 复制其中的cookies和header，粘贴到脚本当中，并设置需要重置的单词集ID
-6. 运行这个脚本```
+6. 运行这个脚本````
 $python resetTermForQuizlet.py
 able reset done.
 about reset done.
-```
+````
 
