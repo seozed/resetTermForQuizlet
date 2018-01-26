@@ -44,8 +44,8 @@
            'DNT': '1',
            'Pragma': 'no-cache',
            'Cache-Control': 'no-cache',
-           **'CS-Token': 'xxxxxxxxxx',**
-           # 请确保头部拥有`CS-Token`
+           'CS-Token': 'xxxxxxxxxx',
+           # 请确保头部拥有CS-Token
        }
 
        q = QAuto(cookies=cookies, headers=headers)
