@@ -2,12 +2,9 @@ import requests
 import json
 import time
 
-class QAuto(object):
-    def __init__(self, cookies, token):
-        headers = {
-            'CS-Token': token,
-        }
 
+class QAuto(object):
+    def __init__(self, cookies, headers):
         self.session = requests.Session()
         self.session.cookies = requests.utils.cookiejar_from_dict(cookie_dict=cookies)
         self.session.headers.update(headers)
@@ -55,9 +52,11 @@ class QAuto(object):
         :rtype:
         """
         timestamp = int(round(time.time() * 1000))
-        data = '{"data":[{"termId":%s,"definitionImageId":%s,"definitionImageCode":"%s"}],"requestId":"%s:termImage:op-seq-0"}' %(termId, imageId, imageCode, timestamp)
+        data = '{"data":[{"termId":%s,"definitionImageId":%s,"definitionImageCode":"%s"}],"requestId":"%s:termImage:op-seq-0"}' % (
+            termId, imageId, imageCode, timestamp)
         response = self.session.post("https://quizlet.com/webapi/3.2/term-images/save?_method=PUT", data=data)
-        return response.json()
+        item = response.json()
+        return item
 
     def set_definition(self, setId, termId, definition):
         """
@@ -72,7 +71,8 @@ class QAuto(object):
         :rtype:
         """
         timestamp = int(round(time.time() * 1000))
-        data = '{"data":[{"setId":%s,"id":%s,"definition":"%s"}],"requestId":"%s:term:op-seq-0"}' % (setId, termId, definition, timestamp)
+        data = '{"data":[{"setId":%s,"id":%s,"definition":"%s"}],"requestId":"%s:term:op-seq-0"}' % (
+            setId, termId, definition, timestamp)
         data = data.encode('utf-8')
         response = self.session.post("https://quizlet.com/webapi/3.2/terms/save?_method=PUT", data=data)
         return response.json()
@@ -90,7 +90,6 @@ class QAuto(object):
                 definition = response.pop()['text']
                 self.set_definition(setId=setId, termId=termId, definition=definition)
 
-
                 # set term image
                 images = self.get_image(word)
                 imageId = images[0]['id']
@@ -103,24 +102,35 @@ class QAuto(object):
             except IndexError as e:
                 msg = "{word} error: {err}".format(word=word, err=e)
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     cookies = {
-        '__cfduid': '*****',
-        'qi5': '*****',
-        'fs': '*****',
-        'qlts': '*****',
-        '__qca': '*****',
-        '_ga': '*****',
-        '_gid': '*****',
-        '__gads': '*****',
-        'qtkn': '*****',
+        '__cfduid': 'xxxxx',
+        'qi5': 'xxxxxxxxxxxxxx',
+        'fs': 'xxxxxxxxxxxxxx',
+        'qlts': 'xxxxxxxxxxxxxx--VcAw',
+        '__qca': 'P0-xxxxxxxxxxxxxx-xxxxxxxxxxxxxx',
+        '_ga': 'GA1.2.xxxxxxxxxxxxxx.1516845245',
+        '__gads': 'ID=7cd98e1b86049e8f:T=1516845244:S=xxxxxxxxxxxxxx',
+        'qtkn': 'xxxxxxxxxxxxxx',
         'app_session_first_start': '1',
-        'app_session_id': '*****',
+        'app_session_id': '3614e9a2xxxxxxxxxxxxxx24ce-4035-a7f8-eec11b5201b7',
     }
 
-    q = QAuto(cookies=cookies, token='*****')
-    q.resetImageAndDefinitionForAllTerm(256182221)
+    headers = {
+        'Host': 'quizlet.com',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0',
+        'Accept': '*/*',
+        'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.5,zh-HK;q=0.3',
+        'Referer': 'https://quizlet.com/256182221/edit',
+        'CS-Token': 'xxxxxxxx',
+        'Content-Type': 'application/json',
+        'Connection': 'keep-alive',
+        'DNT': '1',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+    }
+    setId = 256182221
 
-
-
+    q = QAuto(cookies=cookies, headers=headers)
+    q.resetImageAndDefinitionForAllTerm(setId)
